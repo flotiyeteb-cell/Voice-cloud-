@@ -1,3 +1,5 @@
+@file:Suppress("EXPERIMENTAL_IS_NOT_ENABLED")
+
 package com.voiceassistant.pro.ui.screens
 
 import androidx.compose.foundation.background

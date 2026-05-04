@@ -1,5 +1,6 @@
 package com.voiceassistant.pro.service
 
+import android.app.Notification
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
@@ -48,43 +49,54 @@ class ForegroundAudioService : Service() {
         return START_STICKY
     }
 
-    private fun buildNotification(sender: String, isGroup: Boolean): androidx.core.app.Notification {
+    private fun buildNotification(sender: String, isGroup: Boolean): Notification {
         val title = if (isGroup) "🎤 Voice in $sender" else "🎤 Voice from $sender"
 
         val openIntent = Intent(this, MainActivity::class.java)
         val openPendingIntent = PendingIntent.getActivity(
-            this, 0, openIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            this,
+            0,
+            openIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val playIntent = Intent(this, NotificationActionReceiver::class.java).apply {
-            action = "ACTION_PLAY"
-        }
         val playPendingIntent = PendingIntent.getBroadcast(
-            this, 1, playIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            this,
+            1,
+            Intent(this, NotificationActionReceiver::class.java).apply {
+                action = "ACTION_PLAY"
+            },
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val pauseIntent = Intent(this, NotificationActionReceiver::class.java).apply {
-            action = "ACTION_PAUSE"
-        }
         val pausePendingIntent = PendingIntent.getBroadcast(
-            this, 2, pauseIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            this,
+            2,
+            Intent(this, NotificationActionReceiver::class.java).apply {
+                action = "ACTION_PAUSE"
+            },
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val speedIntent = Intent(this, NotificationActionReceiver::class.java).apply {
-            action = "ACTION_SPEED"
-        }
         val speedPendingIntent = PendingIntent.getBroadcast(
-            this, 3, speedIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            this,
+            3,
+            Intent(this, NotificationActionReceiver::class.java).apply {
+                action = "ACTION_SPEED"
+            },
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val dismissIntent = Intent(this, NotificationActionReceiver::class.java).apply {
-            action = "ACTION_DISMISS"
-        }
         val dismissPendingIntent = PendingIntent.getBroadcast(
-            this, 4, dismissIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            this,
+            4,
+            Intent(this, NotificationActionReceiver::class.java).apply {
+                action = "ACTION_DISMISS"
+            },
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val builder = NotificationCompat.Builder(this, Constants.CHANNEL_ID_PLAYBACK)
+        return NotificationCompat.Builder(this, Constants.CHANNEL_ID_PLAYBACK)
             .setContentTitle(title)
             .setContentText("Tap to control playback")
             .setSmallIcon(android.R.drawable.ic_media_play)
@@ -97,8 +109,7 @@ class ForegroundAudioService : Service() {
             .setAutoCancel(false)
             .setCategory(NotificationCompat.CATEGORY_SERVICE)
             .setPriority(NotificationCompat.PRIORITY_LOW)
-
-        return builder.build()
+            .build()
     }
 
     override fun onBind(intent: Intent?): IBinder? = null

@@ -1,9 +1,9 @@
 package com.voiceassistant.pro.domain.usecase
 
 import android.app.Notification
+import android.app.RemoteInput
 import android.content.Intent
 import android.os.Bundle
-import androidx.core.app.RemoteInput
 import javax.inject.Inject
 
 class ReplyUseCase @Inject constructor() {

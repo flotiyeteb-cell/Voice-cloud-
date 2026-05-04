@@ -42,7 +42,11 @@ android {
 
     kotlinOptions {
         jvmTarget = '17'
-        freeCompilerArgs = ["-opt-in=androidx.compose.material.ExperimentalMaterialApi"]
+        freeCompilerArgs += [
+            "-opt-in=androidx.compose.material.ExperimentalMaterialApi",
+            "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
+            "-opt-in=kotlinx.coroutines.FlowPreview"
+        ]
     }
 
     buildFeatures {
@@ -74,6 +78,7 @@ dependencies {
     implementation 'androidx.compose.runtime:runtime:1.6.0'
     implementation 'androidx.compose.foundation:foundation:1.6.0'
     implementation 'androidx.lifecycle:lifecycle-runtime-compose:2.6.2'
+    implementation 'androidx.media:media:1.6.0'
 
     // Activity & Navigation
     implementation 'androidx.activity:activity-compose:1.8.0'

@@ -37,7 +37,7 @@ class ForegroundAudioService : Service() {
 
         vibrator = getSystemService(VIBRATOR_SERVICE) as? Vibrator
 
-        val notification = createNotification(sender, isGroup)
+        val notification = buildNotification(sender, isGroup)
         startForeground(Constants.NOTIFICATION_ID_PLAYBACK, notification)
 
         serviceScope.launch {
@@ -48,7 +48,7 @@ class ForegroundAudioService : Service() {
         return START_STICKY
     }
 
-    private fun createNotification(sender: String, isGroup: Boolean): androidx.core.app.Notification {
+    private fun buildNotification(sender: String, isGroup: Boolean): androidx.core.app.Notification {
         val title = if (isGroup) "🎤 Voice in $sender" else "🎤 Voice from $sender"
 
         val openIntent = Intent(this, MainActivity::class.java)
@@ -84,7 +84,7 @@ class ForegroundAudioService : Service() {
             this, 4, dismissIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        return NotificationCompat.Builder(this, Constants.CHANNEL_ID_PLAYBACK)
+        val builder = NotificationCompat.Builder(this, Constants.CHANNEL_ID_PLAYBACK)
             .setContentTitle(title)
             .setContentText("Tap to control playback")
             .setSmallIcon(android.R.drawable.ic_media_play)
@@ -97,7 +97,8 @@ class ForegroundAudioService : Service() {
             .setAutoCancel(false)
             .setCategory(NotificationCompat.CATEGORY_SERVICE)
             .setPriority(NotificationCompat.PRIORITY_LOW)
-            .build()
+
+        return builder.build()
     }
 
     override fun onBind(intent: Intent?): IBinder? = null

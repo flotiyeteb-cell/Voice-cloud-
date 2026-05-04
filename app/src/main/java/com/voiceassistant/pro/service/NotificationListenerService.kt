@@ -14,6 +14,7 @@ import com.voiceassistant.pro.domain.usecase.ExtractActionsUseCase
 import com.voiceassistant.pro.domain.usecase.PlayVoiceUseCase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.first
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -64,15 +65,18 @@ class NotificationListenerService : NotificationListenerService() {
                 )
                 voiceMessageDao.insert(entity)
 
-                // Collect the Flow value
-                val autoPlayEnabled = preferencesManager.autoPlayEnabled.first()
-                if (autoPlayEnabled) {
-                    val actions = extractActionsUseCase.execute(notification)
-                    val playAction = extractActionsUseCase.findPlayAction(actions)
-                    if (playAction != null) {
-                        playVoiceUseCase.execute(playAction)
-                        Timber.d("▶️ Auto-playing voice")
+                try {
+                    val autoPlayEnabled = preferencesManager.autoPlayEnabled.first()
+                    if (autoPlayEnabled) {
+                        val actions = extractActionsUseCase.execute(notification)
+                        val playAction = extractActionsUseCase.findPlayAction(actions)
+                        if (playAction != null) {
+                            playVoiceUseCase.execute(playAction)
+                            Timber.d("▶️ Auto-playing voice")
+                        }
                     }
+                } catch (e: Exception) {
+                    Timber.e("Error checking auto-play: ${e.message}")
                 }
 
                 startForegroundService(Intent(this@NotificationListenerService, ForegroundAudioService::class.java).apply {

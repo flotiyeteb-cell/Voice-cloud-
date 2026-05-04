@@ -18,24 +18,22 @@ android {
         versionName "2.0.0-PRO"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
         vectorDrawables {
             useSupportLibrary true
         }
-
-        buildConfigField "boolean", "DEBUG", "true"
     }
 
     buildTypes {
         debug {
             minifyEnabled false
             debuggable true
-            buildConfigField "boolean", "DEBUG", "true"
         }
+
         release {
             minifyEnabled true
             shrinkResources true
             debuggable false
-            buildConfigField "boolean", "DEBUG", "false"
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -48,9 +46,9 @@ android {
     kotlinOptions {
         jvmTarget = '17'
         freeCompilerArgs += [
-            "-opt-in=androidx.compose.material.ExperimentalMaterialApi",
-            "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
-            "-opt-in=kotlinx.coroutines.FlowPreview"
+                "-opt-in=androidx.compose.material.ExperimentalMaterialApi",
+                "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
+                "-opt-in=kotlinx.coroutines.FlowPreview"
         ]
     }
 
@@ -71,12 +69,13 @@ android {
 }
 
 dependencies {
+
     // Core
     implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.11.0'
 
-    // Jetpack Compose
+    // Compose
     implementation 'androidx.compose.ui:ui:1.6.0'
     implementation 'androidx.compose.material3:material3:1.1.2'
     implementation 'androidx.compose.material:material:1.6.0'
@@ -84,7 +83,7 @@ dependencies {
     implementation 'androidx.compose.runtime:runtime:1.6.0'
     implementation 'androidx.compose.foundation:foundation:1.6.0'
     implementation 'androidx.lifecycle:lifecycle-runtime-compose:2.6.2'
-    implementation 'androidx.media:media:1.6.0'
+    implementation 'androidx.compose.material:material-icons-extended:1.6.0'
 
     // Activity & Navigation
     implementation 'androidx.activity:activity-compose:1.8.0'
@@ -100,14 +99,14 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1'
 
-    // Hilt DI
+    // Hilt
     implementation 'com.google.dagger:hilt-android:2.48'
     kapt 'com.google.dagger:hilt-compiler:2.48'
     implementation 'androidx.hilt:hilt-navigation-compose:1.1.0'
     implementation 'androidx.hilt:hilt-work:1.1.0'
     kapt 'androidx.hilt:hilt-compiler:1.1.0'
 
-    // Room Database
+    // Room
     implementation 'androidx.room:room-runtime:2.6.1'
     kapt 'androidx.room:room-compiler:2.6.1'
     implementation 'androidx.room:room-ktx:2.6.1'
@@ -115,7 +114,7 @@ dependencies {
     // DataStore
     implementation 'androidx.datastore:datastore-preferences:1.0.0'
 
-    // Media3/ExoPlayer
+    // Media3
     implementation 'androidx.media3:media3-exoplayer:1.2.0'
     implementation 'androidx.media3:media3-ui:1.2.0'
     implementation 'androidx.media3:media3-common:1.2.0'
@@ -126,14 +125,15 @@ dependencies {
     // Security
     implementation 'androidx.security:security-crypto:1.1.0-alpha06'
 
-    // Icons Extended
-    implementation 'androidx.compose.material:material-icons-extended:1.6.0'
+    // Media compatibility
+    implementation 'androidx.media:media:1.6.0'
 
     // Testing
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4:1.6.0'
+
     debugImplementation 'androidx.compose.ui:ui-tooling:1.6.0'
     debugImplementation 'androidx.compose.ui:ui-test-manifest:1.6.0'
 }

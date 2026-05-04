@@ -87,7 +87,7 @@ class ForegroundAudioService : Service() {
         return NotificationCompat.Builder(this, Constants.CHANNEL_ID_PLAYBACK)
             .setContentTitle(title)
             .setContentText("Tap to control playback")
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(android.R.drawable.ic_media_play)
             .setContentIntent(openPendingIntent)
             .addAction(android.R.drawable.ic_media_play, "Play", playPendingIntent)
             .addAction(android.R.drawable.ic_media_pause, "Pause", pausePendingIntent)

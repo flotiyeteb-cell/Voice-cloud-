@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Voice Assistant PRO</string>
+    <string name="enable_notification_listener">Enable Notification Access</string>
+    <string name="settings">Settings</string>
+    <string name="about">About</string>
+    <string name="auto_play">Auto-Play</string>
+    <string name="speed_control">Speed Control</string>
+    <string name="transcription">Transcription</string>
+    <string name="skip_silence">Skip Silence</string>
+</resources>

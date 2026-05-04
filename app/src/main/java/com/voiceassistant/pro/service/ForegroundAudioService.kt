@@ -6,7 +6,7 @@ import android.content.Intent
 import android.os.IBinder
 import android.os.Vibrator
 import androidx.core.app.NotificationCompat
-import com.voiceassistant.pro.R
+import androidx.media.app.NotificationCompat.MediaStyle
 import com.voiceassistant.pro.core.Constants
 import com.voiceassistant.pro.data.preferences.PreferencesManager
 import com.voiceassistant.pro.domain.audio.AudioPlayerManager
@@ -93,7 +93,7 @@ class ForegroundAudioService : Service() {
             .addAction(android.R.drawable.ic_media_pause, "Pause", pausePendingIntent)
             .addAction(android.R.drawable.ic_media_next, "Speed 2x", speedPendingIntent)
             .addAction(android.R.drawable.ic_menu_close_clear_cancel, "Dismiss", dismissPendingIntent)
-            .setStyle(androidx.media.app.NotificationCompat.MediaStyle())
+            .setStyle(MediaStyle())
             .setAutoCancel(false)
             .setCategory(NotificationCompat.CATEGORY_SERVICE)
             .setPriority(NotificationCompat.PRIORITY_LOW)

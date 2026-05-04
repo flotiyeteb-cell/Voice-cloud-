@@ -4,6 +4,7 @@ import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
+import com.voiceassistant.pro.BuildConfig
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 

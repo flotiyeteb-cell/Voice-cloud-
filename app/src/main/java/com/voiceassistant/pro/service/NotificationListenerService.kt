@@ -64,7 +64,8 @@ class NotificationListenerService : NotificationListenerService() {
                 )
                 voiceMessageDao.insert(entity)
 
-                val autoPlayEnabled = preferencesManager.autoPlayEnabled.value
+                // Collect the Flow value
+                val autoPlayEnabled = preferencesManager.autoPlayEnabled.first()
                 if (autoPlayEnabled) {
                     val actions = extractActionsUseCase.execute(notification)
                     val playAction = extractActionsUseCase.findPlayAction(actions)

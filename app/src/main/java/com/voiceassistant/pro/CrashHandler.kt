@@ -6,6 +6,7 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import kotlin.system.exitProcess
 
 class CrashHandler(private val context: Context) : Thread.UncaughtExceptionHandler {
 

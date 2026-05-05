@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notification_access_title">Activation requise</string>
+    <string name="notification_access_desc">Voice Assistant PRO a besoin d\'accéder à vos notifications</string>
+    <string name="step1">Étape 1: Accès aux notifications</string>
+    <string name="step2">Étape 2: Comment activer</string>
+</resources>

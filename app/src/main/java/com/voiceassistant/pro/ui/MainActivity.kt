@@ -1,61 +1,100 @@
-<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+package com.voiceassistant.pro.ui
 
-    <!-- Permissions déclarées (pas de demande runtime) -->
-    <uses-permission android:name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    
-    <!-- SEULE permission runtime pour API 33+ -->
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+import android.Manifest
+import android.content.Intent
+import android.os.Build
+import android.os.Bundle
+import android.provider.Settings
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import android.content.pm.PackageManager
+import com.voiceassistant.pro.ui.screens.HomeScreen
+import com.voiceassistant.pro.ui.screens.SettingsScreen
+import com.voiceassistant.pro.ui.theme.VoiceAssistantTheme
+import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
-    <application
-        android:name=".core.BaseApp"
-        android:allowBackup="true"
-        android:dataExtractionRules="@xml/data_extraction_rules"
-        android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:supportsRtl="true"
-        android:theme="@style/Theme.VoiceAssistantPro">
+@AndroidEntryPoint
+class MainActivity : ComponentActivity() {
 
-        <activity
-            android:name=".ui.MainActivity"
-            android:exported="true"
-            android:theme="@style/Theme.VoiceAssistantPro"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-        <!-- NotificationListenerService - Pas de permission ici -->
-        <service
-            android:name=".service.NotificationListenerService"
-            android:enabled="true"
-            android:exported="true"
-            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
-            <intent-filter>
-                <action android:name="android.service.notification.NotificationListenerService" />
-            </intent-filter>
-        </service>
+        Timber.d("🚀 MainActivity created")
 
-        <!-- ForegroundAudioService -->
-        <service
-            android:name=".service.ForegroundAudioService"
-            android:enabled="true"
-            android:exported="false"
-            android:foregroundServiceType="mediaPlayback" />
+        // Request POST_NOTIFICATIONS for Android 13+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                    NOTIFICATION_PERMISSION_CODE
+                )
+                Timber.d("📱 Requesting POST_NOTIFICATIONS permission")
+            }
+        }
 
-        <!-- Broadcast Receiver -->
-        <receiver
-            android:name=".receiver.NotificationActionReceiver"
-            android:enabled="true"
-            android:exported="false" />
+        setContent {
+            VoiceAssistantTheme {
+                Surface(
+                    modifier = androidx.compose.foundation.layout.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    MainApp(
+                        onEnableNotificationAccess = { enableNotificationAccess() }
+                    )
+                }
+            }
+        }
+    }
 
-    </application>
+    private fun enableNotificationAccess() {
+        Timber.d("🔔 Opening notification settings")
+        startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
+    }
 
-</manifest>
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode == NOTIFICATION_PERMISSION_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Timber.d("✅ POST_NOTIFICATIONS permission granted")
+            } else {
+                Timber.w("⚠️ POST_NOTIFICATIONS permission denied")
+            }
+        }
+    }
+
+    companion object {
+        const val NOTIFICATION_PERMISSION_CODE = 1001
+    }
+}
+
+@Composable
+fun MainApp(onEnableNotificationAccess: () -> Unit) {
+    var currentScreen by remember { mutableStateOf("home") }
+
+    when (currentScreen) {
+        "home" -> HomeScreen(
+            onNavigateToSettings = { currentScreen = "settings" },
+            onEnableNotificationAccess = onEnableNotificationAccess
+        )
+        "settings" -> SettingsScreen(
+            onNavigateBack = { currentScreen = "home" }
+        )
+    }
+}
